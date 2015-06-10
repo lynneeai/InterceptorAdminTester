@@ -15,12 +15,7 @@ namespace ConsoleApplication1{
 
     public class HTTPSCalls
     {
-		static string certPath = "../../Data/unittestcert.pfx";
-        static string certPass = "unittest";
-        // Create a collection object and populate it using the PFX file
-        static X509Certificate cert;
-
-        public static KeyValuePair<JObject, string> result;
+		public static KeyValuePair<JObject, string> result;
 
 
         /// <summary>
@@ -28,16 +23,7 @@ namespace ConsoleApplication1{
         /// </summary>
         public HTTPSCalls()
         {
-            try
-            {
-                cert = new X509Certificate(certPath, certPass);
-                Console.WriteLine("SLL certificate created successfully");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Could not initialize SLL certificate");
-                Console.WriteLine(e.ToString());
-            }
+            
         }
 
         /// <summary>
@@ -146,9 +132,7 @@ namespace ConsoleApplication1{
             // ... Use HttpClient.
             try
             {
-                WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+                using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Authorization = clientPass.DefaultRequestHeaders.Authorization;
                     using (HttpResponseMessage response = await client.GetAsync(qUri.AbsoluteUri))
@@ -174,9 +158,7 @@ namespace ConsoleApplication1{
             // ... Use HttpClient.
             try
             {
-				WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+				using (HttpClient client = new HttpClient())
                 {
                     using (HttpResponseMessage response = await client.GetAsync(qUri.AbsoluteUri))
                     {
@@ -200,9 +182,7 @@ namespace ConsoleApplication1{
         {
             try
             {
-				WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+				using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -236,9 +216,7 @@ namespace ConsoleApplication1{
         {
             try
             {
-                WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+                using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -273,9 +251,7 @@ namespace ConsoleApplication1{
             try
             {
                 // ... Use HttpClient.
-				WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+				using (HttpClient client = new HttpClient())
                 {
                     Console.WriteLine(contentToPut.ToString());
                     var upContent = JObject.FromObject(contentToPut);
@@ -306,9 +282,7 @@ namespace ConsoleApplication1{
             try
             {
                 // ... Use HttpClient.
-                WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+                using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -341,9 +315,7 @@ namespace ConsoleApplication1{
             try
             {
                 // ... Use HttpClient.
-				WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+				using (HttpClient client = new HttpClient())
                 using (HttpResponseMessage response = await client.DeleteAsync(qUri))
                 {
                     JObject jResponse = JObject.FromObject(response);
@@ -366,9 +338,7 @@ namespace ConsoleApplication1{
             try
             {
                 // ... Use HttpClient.
-                WebRequestHandlerWithClientcertificates handler = new WebRequestHandlerWithClientcertificates();
-                handler.ClientCertificates.Add(cert);
-                using (HttpClient client = new HttpClient(handler))
+                using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Authorization = clientPass.DefaultRequestHeaders.Authorization;
                     using (HttpResponseMessage response = await client.DeleteAsync(qUri))
