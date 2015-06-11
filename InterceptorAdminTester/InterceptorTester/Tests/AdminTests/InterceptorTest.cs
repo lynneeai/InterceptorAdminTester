@@ -58,6 +58,9 @@ namespace InterceptorTester.Tests.AdminTests
             Console.WriteLine(newInt.getJson().ToString());
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
             Console.WriteLine(HTTPSCalls.result.Value.ToString());
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+			Assert.AreEqual ("201", statusCode);
+			Console.WriteLine(HTTPSCalls.result.Value.ToString());
 		}
 
 		[Test()]
@@ -82,7 +85,7 @@ namespace InterceptorTester.Tests.AdminTests
 		}
 
 		[Test()]
-		public static void invalidIntSerial()
+		public static void invalidIntSerialID()
 		{
 			string loc = LocationTest.getLocId ();
 			Console.WriteLine ("Creating interceptor w/ loc:");
@@ -107,7 +110,7 @@ namespace InterceptorTester.Tests.AdminTests
         private static string idPost()
         {
             string query = "/api/interceptorId/";
-            string intSerial = "123456789020";
+            string intSerial = "987654321";
             string intId = "8675308";
             
             SHA1 sha = new SHA1CryptoServiceProvider();
@@ -145,7 +148,22 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.GET, client));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Assert.AreEqual("200", statusCode);
-			intStore = HTTPCalls.result;
+			intStore = HTTPSCalls.result;
+		}
+
+		[Test()]
+		public void invalidIntSerial()
+		{
+			string query = "/API/Interceptor/" + "invalidSerial";
+			Console.WriteLine (query);
+			GenericRequest getInt = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test mTest = new Test (getInt);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("404", statusCode);
+			intStore = HTTPSCalls.result;
 		}
 
 		[Test()]
@@ -159,8 +177,38 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run (async() => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Assert.AreEqual("200", statusCode);
-			intStore = HTTPCalls.result;
+			intStore = HTTPSCalls.result;
 		}
+
+		[Test()]
+		public void locNotFound()
+		{
+			string query = "/API/Interceptor/?LocId=" + "invalid";
+			GenericRequest getInt = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test mTest = new Test (getInt);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls().runTest (mTest, HTTPOperation.GET, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("404", statusCode);
+			intStore = HTTPSCalls.result;
+		}
+
+		[Test()]
+		public void intNotDeactivated()
+		{
+			Console.WriteLine ("Trying to delete: " + TestGlobals.intSerialCreated);
+			string query = "/api/interceptor/" + TestGlobals.intSerialCreated;
+			GenericRequest intReq = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test intTest = new Test (intReq);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (intTest, HTTPOperation.DELETE, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("400", statusCode);
+			intStore = HTTPSCalls.result;
+		}
+
 
 		[Test()]
 		public void removeInterceptor()
@@ -178,7 +226,25 @@ namespace InterceptorTester.Tests.AdminTests
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(intTest, HTTPOperation.DELETE, client));
             Console.WriteLine(HTTPSCalls.result.Value);
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("204", statusCode);
+			intStore = HTTPSCalls.result;
 		}
+
+		[Test()]
+		public void removingIntNotFound()
+		{
+			string query = "/api/interceptor/" + "invalidSerial";
+			GenericRequest intReq = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test intTest = new Test (intReq);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (intTest, HTTPOperation.DELETE, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("404", statusCode);
+			intStore = HTTPSCalls.result;
+		}
+
 
         private void disableId(string id)
         {

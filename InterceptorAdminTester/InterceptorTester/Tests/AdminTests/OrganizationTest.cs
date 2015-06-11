@@ -60,7 +60,7 @@ namespace InterceptorTester.Tests.AdminTests
 		[Test()]
 		public void invalidOrgID()
 		{
-			string query = "/api/organization/" + "0000";
+			string query = "/api/organization/" + "invalidOrg";
 			GenericRequest getOrg = new GenericRequest (TestGlobals.adminServer, query, null);
 			Test mTest = new Test (getOrg);
 			HttpClient client = new HttpClient ();
@@ -106,7 +106,7 @@ namespace InterceptorTester.Tests.AdminTests
 		[Test()]
 		public void removingOrgNotFound()
 		{
-			string query = "/api/organization/" + "0000";
+			string query = "/api/organization/" + "invalidOrg";
 			GenericRequest orgReq = new GenericRequest (TestGlobals.adminServer, query, null);
 			Test orgTest = new Test (orgReq);
 			HttpClient client = new HttpClient ();

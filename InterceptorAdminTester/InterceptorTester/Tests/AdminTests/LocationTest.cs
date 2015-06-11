@@ -68,7 +68,7 @@ namespace InterceptorTester.Tests.AdminTests
 		[Test()]
 		public static void invalidOrgID()
 		{
-			orgIdPassed = "0000";
+			orgIdPassed = "invalid";
 			LocationJSON json = new LocationJSON (orgIdPassed, "suite", "street", "suddenValley", "um", "Murica", "A2A2A2");
 			json.locDesc = "desc";
 			json.locSubType = "subtype";
@@ -100,7 +100,7 @@ namespace InterceptorTester.Tests.AdminTests
 		[Test()]
 		public void invalidLocID()
 		{
-			string query = "/API/Location/" + "000";
+			string query = "/API/Location/" + "invalid";
 			GenericRequest getLoc = new GenericRequest (TestGlobals.adminServer, query, null);
 			Test mTest = new Test (getLoc);
 			HttpClient client = new HttpClient ();
@@ -129,7 +129,7 @@ namespace InterceptorTester.Tests.AdminTests
 		[Test()]
 		public void orgNotFound()
 		{
-			string query = "/API/Location??orgid=" + "0000";
+			string query = "/API/Location??orgid=" + "invalid";
 			GenericRequest getLoc = new GenericRequest (TestGlobals.adminServer, query, null);
 			Test mTest = new Test(getLoc);
 			HttpClient client = new HttpClient ();
@@ -160,7 +160,7 @@ namespace InterceptorTester.Tests.AdminTests
 		[Test()]
 		public void removingLocNotFound()
 		{
-			string query = "/api/location/" + "000";
+			string query = "/api/location/" + "invalid";
 			GenericRequest locReq = new GenericRequest (TestGlobals.adminServer, query, null);
 			Test locTest = new Test (locReq);
 			HttpClient client = new HttpClient ();
