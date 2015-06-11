@@ -26,6 +26,21 @@ namespace InterceptorTester.Tests.AdminTests
             TestGlobals.setup();
         }
 
+		public static void createInt(string locID)
+		{
+			string loc = locID;
+			Console.WriteLine("Creating intercepter w/ loc:");
+			Console.WriteLine(loc);
+			idPost();
+			InterceptorJSON json = new InterceptorJSON(int.Parse(TestGlobals.locIdCreated), TestGlobals.intSerialCreated, "wappisk", "AYYYYLMAO");
+			Interceptor newInt = new Interceptor(TestGlobals.adminServer, TestGlobals.intIdCreated, json);
+			Test mTest = new Test(newInt);
+			HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
+			Console.WriteLine(newInt.getJson().ToString());
+			AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
+			Console.WriteLine(HTTPSCalls.result.Value.ToString());
+		}
 
 		[Test()]
 		public static void createInterceptor()

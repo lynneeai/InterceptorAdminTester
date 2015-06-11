@@ -17,7 +17,7 @@ namespace InterceptorTester.Tests.AdminTests
 	[TestFixture()]
     public class LocationTest
     {
-        public KeyValuePair<JObject, string> locStore;
+        public static KeyValuePair<JObject, string> locStore;
 
 		public static string locIdCreated;
         public static string orgIdPassed;
@@ -65,6 +65,24 @@ namespace InterceptorTester.Tests.AdminTests
             Console.WriteLine(HTTPSCalls.result.Value.Substring(9, HTTPSCalls.result.Value.Length - 10) + " Written to testGlobals");
         }
 
+		[Test()]
+		public static void invalidOrgID()
+		{
+			orgIdPassed = "0000";
+			LocationJSON json = new LocationJSON (orgIdPassed, "suite", "street", "suddenValley", "um", "Murica", "A2A2A2");
+			json.locDesc = "desc";
+			json.locSubType = "subtype";
+			json.locType = "type";
+			Location newLoc = new Location (TestGlobals.adminServer, json);
+			Test mTest = new Test (newLoc);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls().runTest (mTest, HTTPOperation.POST, client));
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+			Assert.AreEqual ("400", statusCode);
+			locStore = HTTPCalls.result;
+		}
+
         [Test()]
         public void getSingleLocation()
         {
@@ -80,6 +98,21 @@ namespace InterceptorTester.Tests.AdminTests
         }
 
 		[Test()]
+		public void invalidLocID()
+		{
+			string query = "/API/Location/" + "000";
+			GenericRequest getLoc = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test mTest = new Test (getLoc);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("404", statusCode);
+			locStore = HTTPCalls.result;
+		}
+
+
+		[Test()]
 		public void getMultipleLocations()
 		{
 			string query = "/API/Location/?orgid=" + TestGlobals.orgIdCreated;
@@ -91,6 +124,20 @@ namespace InterceptorTester.Tests.AdminTests
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Assert.AreEqual("200", statusCode);
             locStore = HTTPCalls.result;
+		}
+
+		[Test()]
+		public void orgNotFound()
+		{
+			string query = "/API/Location??orgid=" + "0000";
+			GenericRequest getLoc = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test mTest = new Test(getLoc);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("400", statusCode);
+			locStore = HTTPCalls.result;
 		}
 
 		[Test()]
@@ -110,6 +157,34 @@ namespace InterceptorTester.Tests.AdminTests
 			Console.WriteLine (TestGlobals.locIdCreated);
 		}
 
+		[Test()]
+		public void removingLocNotFound()
+		{
+			string query = "/api/location/" + "000";
+			GenericRequest locReq = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test locTest = new Test (locReq);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (locTest, HTTPOperation.DELETE, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("404", statusCode);
+		}
+
+		[Test()]
+		public void intAssociated()
+		{
+			createLocation ();
+			InterceptorTest.createInt (TestGlobals.locIdCreated);
+
+			string query = "/api/location/" + TestGlobals.locIdCreated;
+			GenericRequest locReq = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test locTest = new Test (locReq);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (locTest, HTTPOperation.DELETE, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("400", statusCode);
+		}
 
         public static string getLocId()
         {

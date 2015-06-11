@@ -104,7 +104,7 @@ namespace InterceptorTester.Tests.AdminTests
 		}
 
 		[Test()]
-		public void orgNotFound()
+		public void removingOrgNotFound()
 		{
 			string query = "/api/organization/" + "0000";
 			GenericRequest orgReq = new GenericRequest (TestGlobals.adminServer, query, null);
@@ -114,7 +114,6 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run(async () => await new HTTPSCalls().runTest(orgTest, HTTPOperation.DELETE, client));
 			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
 			Assert.AreEqual ("404", statusCode);
-			orgStore = HTTPCalls.result;
 		}
 
 		[Test()]
@@ -133,7 +132,6 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run(async () => await new HTTPSCalls().runTest(orgTest, HTTPOperation.DELETE, client));
 			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
 			Assert.AreEqual ("400", statusCode);
-			orgStore = HTTPCalls.result;
 		}
 
 
