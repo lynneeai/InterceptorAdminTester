@@ -18,7 +18,7 @@ namespace InterceptorTester.Tests.AdminTests
 	[TestFixture()]
     public class InterceptorTest
     {
-        KeyValuePair<JObject, string> intStore;
+        static KeyValuePair<JObject, string> intStore;
 
 		[TestFixtureSetUp()]
         public void setup()
@@ -59,6 +59,50 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
             Console.WriteLine(HTTPSCalls.result.Value.ToString());
 		}
+
+		[Test()]
+		public static void invalidLocID()
+		{
+			string loc = "000";
+			Console.WriteLine("Creating intercepter w/ loc:");
+			Console.WriteLine(loc);
+
+			idPost ();
+			InterceptorJSON json = new InterceptorJSON (int.Parse (loc), TestGlobals.intSerialCreated, "wappisk", "HEYYYYYYY");
+			Interceptor newInt = new Interceptor (TestGlobals.adminServer, TestGlobals.intIdCreated, json);
+			Test mTest = new Test (newInt);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			Console.WriteLine(newInt.getJson().ToString());
+			AsyncContext.Run (async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+			Assert.AreEqual ("412", statusCode);
+			Console.WriteLine(HTTPSCalls.result.Value.ToString());
+			intStore = HTTPSCalls.result;
+		}
+
+		[Test()]
+		public static void invalidIntSerial()
+		{
+			string loc = LocationTest.getLocId ();
+			Console.WriteLine ("Creating interceptor w/ loc:");
+			Console.WriteLine (loc);
+
+			string invalidSerial = "invalidSerial";
+			string invalidIntID = "000000000000";
+			InterceptorJSON json = new InterceptorJSON (int.Parse (loc), invalidSerial, "wappisk", "HELLOOOOO");
+			Interceptor newInt = new Interceptor (TestGlobals.adminServer, invalidIntID, json);
+			Test mTest = new Test (newInt);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			Console.WriteLine (newInt.getJson ().ToString ());
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.POST, client));
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+			Assert.AreEqual ("412", statusCode);
+			Console.WriteLine (HTTPSCalls.result.Value.ToString ());
+			intStore = HTTPSCalls.result;
+		}
+
 
         private static string idPost()
         {

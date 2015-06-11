@@ -53,7 +53,7 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.GET, client));
 			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
             Assert.AreEqual("200", statusCode);
-            orgStore = HTTPCalls.result;
+            orgStore = HTTPSCalls.result;
         }
 
 
@@ -68,7 +68,7 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run (async() => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
 			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
 			Assert.AreEqual ("404", statusCode);
-			orgStore = HTTPCalls.result;
+			orgStore = HTTPSCalls.result;
 		}
 
 
@@ -84,7 +84,7 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.GET, client));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Assert.AreEqual("200", statusCode);
-            orgStore = HTTPCalls.result;
+            orgStore = HTTPSCalls.result;
 		}
 			
 

@@ -80,7 +80,7 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run (async () => await new HTTPSCalls().runTest (mTest, HTTPOperation.POST, client));
 			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
 			Assert.AreEqual ("400", statusCode);
-			locStore = HTTPCalls.result;
+			locStore = HTTPSCalls.result;
 		}
 
         [Test()]
@@ -94,7 +94,7 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.GET, client));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Assert.AreEqual("200", statusCode);
-            locStore = HTTPCalls.result;
+            locStore = HTTPSCalls.result;
         }
 
 		[Test()]
@@ -108,7 +108,7 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
 			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
 			Assert.AreEqual ("404", statusCode);
-			locStore = HTTPCalls.result;
+			locStore = HTTPSCalls.result;
 		}
 
 
@@ -123,7 +123,7 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.GET, client));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Assert.AreEqual("200", statusCode);
-            locStore = HTTPCalls.result;
+            locStore = HTTPSCalls.result;
 		}
 
 		[Test()]
@@ -137,7 +137,7 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
 			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
 			Assert.AreEqual ("400", statusCode);
-			locStore = HTTPCalls.result;
+			locStore = HTTPSCalls.result;
 		}
 
 		[Test()]
