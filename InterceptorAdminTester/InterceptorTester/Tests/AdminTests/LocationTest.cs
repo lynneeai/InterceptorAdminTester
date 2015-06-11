@@ -28,6 +28,24 @@ namespace InterceptorTester.Tests.AdminTests
             TestGlobals.setup();
         }
 
+		public static void createLoc(string orgId)
+		{
+			orgIdPassed = orgId;
+			LocationJSON json = new LocationJSON(orgIdPassed, "suite", "street", "suddenValley", "um", "Murica", "A2A2A2");
+			json.locDesc = "desc";
+			json.locSubType = "subtype";
+			json.locType = "type";
+			Location newLoc = new Location(TestGlobals.adminServer, json);
+			Test mTest = new Test(newLoc);
+			HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
+			AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
+			//Assert.AreEqual("201", HTTPSCalls.result.Value);
+			Console.WriteLine(HTTPSCalls.result.Value);
+			TestGlobals.locIdCreated = HTTPSCalls.result.Value.Substring(9, HTTPSCalls.result.Value.Length - 10);
+			Console.WriteLine(HTTPSCalls.result.Value.Substring(9, HTTPSCalls.result.Value.Length - 10) + " Written to testGlobals");
+		}
+
         [Test()]
         public static void createLocation()
         {

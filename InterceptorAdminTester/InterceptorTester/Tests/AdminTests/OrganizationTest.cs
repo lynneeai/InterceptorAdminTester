@@ -51,10 +51,27 @@ namespace InterceptorTester.Tests.AdminTests
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.GET, client));
-            string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
             Assert.AreEqual("200", statusCode);
             orgStore = HTTPCalls.result;
         }
+
+
+		[Test()]
+		public void invalidOrgID()
+		{
+			string query = "/api/organization/" + "0000";
+			GenericRequest getOrg = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test mTest = new Test (getOrg);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async() => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+			Assert.AreEqual ("404", statusCode);
+			orgStore = HTTPCalls.result;
+		}
+
+
 
 		[Test()]
 		public void getMultipleOrganization()
@@ -69,6 +86,7 @@ namespace InterceptorTester.Tests.AdminTests
             Assert.AreEqual("200", statusCode);
             orgStore = HTTPCalls.result;
 		}
+			
 
 		[Test()]
 		public void removeOrganization()
@@ -84,6 +102,40 @@ namespace InterceptorTester.Tests.AdminTests
             Console.WriteLine(HTTPSCalls.result.Value);
             Assert.AreEqual("{\"completedSuccessfully\":true}", HTTPSCalls.result.Value);
 		}
+
+		[Test()]
+		public void orgNotFound()
+		{
+			string query = "/api/organization/" + "0000";
+			GenericRequest orgReq = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test orgTest = new Test (orgReq);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run(async () => await new HTTPSCalls().runTest(orgTest, HTTPOperation.DELETE, client));
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+			Assert.AreEqual ("404", statusCode);
+			orgStore = HTTPCalls.result;
+		}
+
+		[Test()]
+		public void userLocAssociated()
+		{
+			createOrganization ();
+			LocationTest.createLoc (TestGlobals.orgIdCreated);
+
+			string query = "/api/organization/" + TestGlobals.orgIdCreated;
+			GenericRequest orgReq = new GenericRequest(TestGlobals.adminServer, query, null);
+			Test orgTest = new Test(orgReq);
+			HttpClient client;
+
+			client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken(); 
+			AsyncContext.Run(async () => await new HTTPSCalls().runTest(orgTest, HTTPOperation.DELETE, client));
+			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+			Assert.AreEqual ("400", statusCode);
+			orgStore = HTTPCalls.result;
+		}
+
 
         public static string getOrgId()
         {
