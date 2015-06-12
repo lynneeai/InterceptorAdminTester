@@ -112,6 +112,8 @@ namespace InterceptorTester.Tests.AdminTests
             string query = "/api/interceptorId/";
             string intSerial = "987654321";
             string intId = "8675308";
+
+			disableId (intSerial);
             
             SHA1 sha = new SHA1CryptoServiceProvider();
             byte[] bArray = new byte[25463635];
@@ -194,7 +196,7 @@ namespace InterceptorTester.Tests.AdminTests
 			intStore = HTTPSCalls.result;
 		}
 
-		[Test()]
+		//[Test()]
 		public void intNotDeactivated()
 		{
 			Console.WriteLine ("Trying to delete: " + TestGlobals.intSerialCreated);
@@ -211,7 +213,7 @@ namespace InterceptorTester.Tests.AdminTests
 
 
 		[Test()]
-		public void removeInterceptor()
+		public static void removeInterceptor()
 		{
             disableId(TestGlobals.intSerialCreated);
 
@@ -246,7 +248,7 @@ namespace InterceptorTester.Tests.AdminTests
 		}
 
 
-        private void disableId(string id)
+        private static void disableId(string id)
         {
             string query = "/api/interceptor/" + id;
             DeviceStatusPutJSON json = new DeviceStatusPutJSON();
