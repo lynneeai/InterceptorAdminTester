@@ -196,20 +196,7 @@ namespace InterceptorTester.Tests.AdminTests
 			intStore = HTTPSCalls.result;
 		}
 
-		//[Test()]
-		public void intNotDeactivated()
-		{
-			Console.WriteLine ("Trying to delete: " + TestGlobals.intSerialCreated);
-			string query = "/api/interceptor/" + TestGlobals.intSerialCreated;
-			GenericRequest intReq = new GenericRequest (TestGlobals.adminServer, query, null);
-			Test intTest = new Test (intReq);
-			HttpClient client = new HttpClient ();
-			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
-			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (intTest, HTTPOperation.DELETE, client));
-			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
-			Assert.AreEqual ("400", statusCode);
-			intStore = HTTPSCalls.result;
-		}
+
 
 
 		[Test()]
@@ -244,6 +231,21 @@ namespace InterceptorTester.Tests.AdminTests
 			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (intTest, HTTPOperation.DELETE, client));
 			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
 			Assert.AreEqual ("404", statusCode);
+			intStore = HTTPSCalls.result;
+		}
+
+		[Test()]
+		public void removingIntNotDeactived()
+		{
+			Console.WriteLine ("Trying to delete: " + TestGlobals.intSerialCreated);
+			string query = "/api/interceptor/" + TestGlobals.intSerialCreated;
+			GenericRequest intReq = new GenericRequest (TestGlobals.adminServer, query, null);
+			Test intTest = new Test (intReq);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (intTest, HTTPOperation.DELETE, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("400", statusCode);
 			intStore = HTTPSCalls.result;
 		}
 
