@@ -110,11 +110,9 @@ namespace InterceptorTester.Tests.AdminTests
         private static string idPost()
         {
             string query = "/api/interceptorId/";
-            string intSerial = "987654321";
+            string intSerial = "135792468";
             string intId = "8675308";
 
-			disableId (intSerial);
-            
             SHA1 sha = new SHA1CryptoServiceProvider();
             byte[] bArray = new byte[25463635];
             byte[] hashedPasswordInBytes = sha.ComputeHash(bArray);
