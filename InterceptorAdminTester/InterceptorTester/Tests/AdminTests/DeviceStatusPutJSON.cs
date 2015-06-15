@@ -30,6 +30,7 @@ namespace InterceptorTester.Tests.AdminTests
         public int maxBatchWaitTime;
         public int cmdChkInt;
         public string Ssid;
+		public string wpaSK;
 
         public DeviceStatusPutJSON()
         {
@@ -56,6 +57,7 @@ namespace InterceptorTester.Tests.AdminTests
             this.maxBatchWaitTime = 16;
             this.cmdChkInt = 15;
             this.Ssid = "43B81B4F768D0549AB4F178022DEB384";
+			this.wpaSK = null;
         }
 	}
 }

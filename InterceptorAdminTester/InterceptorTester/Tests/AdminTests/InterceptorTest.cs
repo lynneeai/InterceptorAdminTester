@@ -40,6 +40,7 @@ namespace InterceptorTester.Tests.AdminTests
 			Console.WriteLine(newInt.getJson().ToString());
 			AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
 			Console.WriteLine(HTTPSCalls.result.Value.ToString());
+
 		}
 
 		[Test()]
@@ -194,6 +195,39 @@ namespace InterceptorTester.Tests.AdminTests
 			intStore = HTTPSCalls.result;
 		}
 
+
+		[Test()]
+		public static void intConfigUpdate()
+		{
+			string query = "/API/Interceptor/" + TestGlobals.intSerialCreated;
+			DeviceStatusPutJSON json = new DeviceStatusPutJSON();
+			json.deviceStatus = 1;
+			GenericRequest putInt = new GenericRequest (TestGlobals.adminServer, query, json);
+			Test mTest = new Test (putInt);
+			HttpClient client = new HttpClient ();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
+			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.PUT, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+			Assert.AreEqual ("204", statusCode);
+		}
+
+		[Test()]
+		public static void intWifiConfigUpdate()
+		{
+			string query = "/api/interceptor/wifi" + TestGlobals.intSerialCreated;
+			DeviceStatusPutJSON json = new DeviceStatusPutJSON();
+			json.deviceStatus = 1;
+			json.Ssid = "HeyThisIsTheNewSSID";
+			json.wpaSK = "HeyThisIsTheNewwapSK";
+			GenericRequest putInt = new GenericRequest(TestGlobals.adminServer, query, json);
+			Test mTest = new Test(putInt);
+			HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
+			AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.PUT, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+			Assert.AreEqual("204", statusCode);
+
+		}
 
 
 
