@@ -13,17 +13,17 @@ namespace ConsoleApplication1
             this.unitSuite = unitSuite;
             this.street = street;
             this.city = city;
-            this.State = province;
+            this.StateProvince = province;
             this.country = country;
             this.postalCode = postalCode;
-            this.State = province;
+            this.StateProvince = province;
         }
 
 
 
 		public bool isValid ()
 		{
-			if ((orgId != null) && (unitSuite != null) && (city != null) && (State != null) && (country != null) && (postalCode != null))
+			if ((orgId != null) && (unitSuite != null) && (city != null) && (StateProvince != null) && (country != null) && (postalCode != null))
 			{
 				return true;
 			}
@@ -31,7 +31,7 @@ namespace ConsoleApplication1
 			return false;
 		}
 
-        public string State;
+        public string StateProvince;
 
 		public string orgId;
 
