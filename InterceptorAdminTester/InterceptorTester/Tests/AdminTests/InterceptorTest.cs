@@ -112,6 +112,7 @@ namespace InterceptorTester.Tests.AdminTests
         private static string idPost()
         {
             string query = "/api/interceptorId/";
+            //IntSerial needs to be 12 characters long or it'll error horribly
             string intSerial = "135792468321";
             string intId = "8675308";
 
