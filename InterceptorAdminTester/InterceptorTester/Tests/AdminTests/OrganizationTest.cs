@@ -67,7 +67,7 @@ namespace InterceptorTester.Tests.AdminTests
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
 			AsyncContext.Run (async() => await new HTTPSCalls ().runTest (mTest, HTTPOperation.GET, client));
 			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
-			Assert.AreEqual ("404", statusCode);
+			Assert.AreEqual ("400", statusCode);
 			orgStore = HTTPSCalls.result;
 		}
 
@@ -113,7 +113,7 @@ namespace InterceptorTester.Tests.AdminTests
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
 			AsyncContext.Run(async () => await new HTTPSCalls().runTest(orgTest, HTTPOperation.DELETE, client));
 			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
-			Assert.AreEqual ("404", statusCode);
+			Assert.AreEqual ("400", statusCode);
 		}
 
 		[Test()]

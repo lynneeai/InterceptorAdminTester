@@ -59,12 +59,13 @@ namespace InterceptorTester.Tests.AdminTests
 			Test mTest = new Test(newInt);
             HttpClient client = new HttpClient();
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
+            Console.WriteLine("Posting JSON:");
             Console.WriteLine(newInt.getJson().ToString());
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
             Console.WriteLine(HTTPSCalls.result.Value.ToString());
-			string statusCode = HTTPSCalls.result.Key.Property ("StatusCode").Value.ToString ();
+            string statusCode = HTTPSCalls.result.Key.Property("StatusCode").Value.ToString();
+            Console.WriteLine(HTTPSCalls.result.Value.ToString());
 			Assert.AreEqual ("201", statusCode);
-			Console.WriteLine(HTTPSCalls.result.Value.ToString());
 		}
 
 		[Test()]
@@ -114,7 +115,8 @@ namespace InterceptorTester.Tests.AdminTests
         private static string idPost()
         {
             string query = "/api/interceptorId/";
-            string intSerial = "123456789012";
+			string intSerial = "135792468";
+
             string intId = "8675308";
 
             SHA1 sha = new SHA1CryptoServiceProvider();
@@ -124,8 +126,8 @@ namespace InterceptorTester.Tests.AdminTests
             InterceptorIdJSON json = new InterceptorIdJSON ("TESTSERIAL", stringPassword);
             InterceptorIdJSON[] idList = new InterceptorIdJSON[1];
             idList[0] = json;
-            JObject jPass = JObject.Parse("{\"idList\":[{\"intId\":\""+intId+"\", \"intSerial\":\""+intSerial+"\", \"key\": \"IEEgQiBQIFIgVSAiIP8=\"},{\"intId\":\"8675309\", \"intSerial\":\"123456789021\", \"key\": \"IEEgQiBQIFIgVSAiIP8=\"}]}");
-            GenericRequest newId = new GenericRequest(TestGlobals.adminServer, query, jPass);
+            //JObject jPass = JObject.Parse("{\"idList\":[{\"intId\":\""+intId+"\", \"intSerial\":\""+intSerial+"\", \"key\": \"IEEgQiBQIFIgVSAiIP8=\"}]}");
+            GenericRequest newId = new GenericRequest(TestGlobals.adminServer, query, idList);
             Test mTest = new Test(newId);
 
             HttpClient client = new HttpClient();
@@ -134,6 +136,7 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Console.WriteLine(statusCode);
+            Console.WriteLine(HTTPSCalls.result.Key.ToString());
             Console.WriteLine(HTTPSCalls.result.Value.ToString());
             TestGlobals.intIdCreated = intId;
             TestGlobals.intSerialCreated = intSerial;
@@ -144,7 +147,7 @@ namespace InterceptorTester.Tests.AdminTests
 		public void getSingleInterceptor()
 		{
 			string query = "/API/Interceptor/" + TestGlobals.intSerialCreated;
-			Console.WriteLine(query);
+            Console.WriteLine(query);
             GenericRequest getInt = new GenericRequest(TestGlobals.adminServer, query, null);
 			Test mTest = new Test(getInt);
             HttpClient client = new HttpClient();

@@ -54,6 +54,7 @@ namespace InterceptorTester.Tests.AdminTests
             json.locDesc = "desc";
             json.locSubType = "subtype";
             json.locType = "type";
+
 			Location newLoc = new Location(TestGlobals.adminServer, json);
             Test mTest = new Test(newLoc);
             HttpClient client = new HttpClient();

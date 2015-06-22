@@ -41,8 +41,6 @@ namespace ConsoleApplication1
 				demoServer = new Uri("http://cozumointops.cloudapp.net");
 
 				adminServer = new Uri(ConfigurationManager.ConnectionStrings["AdminServer"].ConnectionString);
-				//adminServer = new Uri("http://cozdev01admapiweb.cloudapp.net");
-
 				validSerial = ConfigurationManager.ConnectionStrings["ValidSerial"].ConnectionString;
 				//demoSerial = ConfigurationManager.ConnectionStrings["DemoSerial"].ConnectionString;
 
