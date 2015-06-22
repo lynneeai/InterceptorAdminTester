@@ -36,7 +36,10 @@ namespace InterceptorTester.Tests.AdminTests
             Authenticate authCall = new Authenticate(TestGlobals.adminServer, json);
             Test authTest = new Test(authCall);
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(authTest, HTTPOperation.POST));
-			sessionToken = JObject.Parse(HTTPSCalls.result.Value);
+            string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+            sessionToken = JObject.Parse(HTTPSCalls.result.Value);
+            Console.WriteLine(sessionToken.ToString());
+            Assert.AreEqual("201", statusCode);
         }
 
         [Test()]
@@ -58,11 +61,15 @@ namespace InterceptorTester.Tests.AdminTests
             {
                 generateSessionToken();
             }
-            if (sessionToken.GetValue("_sessionToken") == null)
+            if (sessionToken.GetValue("sessionToken").Equals(null))
             {
                 generateSessionToken();
             }
-            string parse = "Token " + sessionToken.GetValue("_sessionToken").ToString();
+            if (sessionToken.GetValue("sessionToken").ToString().Equals(null))
+            {
+                generateSessionToken();
+            }
+            string parse = "Token " + sessionToken.GetValue("sessionToken").ToString();
             Console.WriteLine(parse);
             AuthenticationHeaderValue ret = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(parse);
             return ret;
