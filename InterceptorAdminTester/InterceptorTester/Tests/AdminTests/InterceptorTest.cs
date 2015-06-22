@@ -141,7 +141,7 @@ namespace InterceptorTester.Tests.AdminTests
 		public void getSingleInterceptor()
 		{
 			string query = "/API/Interceptor/" + TestGlobals.intSerialCreated;
-            Console.WriteLine(query);
+			Console.WriteLine(query);
             GenericRequest getInt = new GenericRequest(TestGlobals.adminServer, query, null);
 			Test mTest = new Test(getInt);
             HttpClient client = new HttpClient();

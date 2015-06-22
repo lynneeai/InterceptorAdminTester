@@ -58,11 +58,11 @@ namespace InterceptorTester.Tests.AdminTests
             {
                 generateSessionToken();
             }
-            if (sessionToken.GetValue("_sessionToken") == null)
+            if (sessionToken.GetValue("sessionToken") == null)
             {
                 generateSessionToken();
             }
-            string parse = "Token " + sessionToken.GetValue("_sessionToken").ToString();
+            string parse = "Token " + sessionToken.GetValue("sessionToken").ToString();
             Console.WriteLine(parse);
             AuthenticationHeaderValue ret = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(parse);
             return ret;
