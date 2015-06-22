@@ -32,6 +32,9 @@ namespace InterceptorTester.Tests.AdminTests
 			Console.WriteLine("Creating intercepter w/ loc:");
 			Console.WriteLine(loc);
 			idPost();
+
+
+
 			InterceptorJSON json = new InterceptorJSON(int.Parse(TestGlobals.locIdCreated), TestGlobals.intSerialCreated, "wappisk", "AYYYYLMAO");
 			Interceptor newInt = new Interceptor(TestGlobals.adminServer, TestGlobals.intIdCreated, json);
 			Test mTest = new Test(newInt);
@@ -51,7 +54,7 @@ namespace InterceptorTester.Tests.AdminTests
             Console.WriteLine("Creating intercepter w/ loc:");
             Console.WriteLine(loc);
             idPost();
-            InterceptorJSON json = new InterceptorJSON(int.Parse(TestGlobals.locIdCreated), TestGlobals.intSerialCreated, "wappisk", "AYYYYLMAO");
+			InterceptorJSON json = new InterceptorJSON(int.Parse(TestGlobals.locIdCreated), TestGlobals.intSerialCreated, "wappisk", "AYYYYLMAO");
             Interceptor newInt = new Interceptor(TestGlobals.adminServer, TestGlobals.intIdCreated, json);
 			Test mTest = new Test(newInt);
             HttpClient client = new HttpClient();
@@ -111,7 +114,7 @@ namespace InterceptorTester.Tests.AdminTests
         private static string idPost()
         {
             string query = "/api/interceptorId/";
-            string intSerial = "246813579";
+            string intSerial = "123456789012";
             string intId = "8675308";
 
             SHA1 sha = new SHA1CryptoServiceProvider();
