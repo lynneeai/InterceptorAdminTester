@@ -112,7 +112,7 @@ namespace InterceptorTester.Tests.AdminTests
         private static string idPost()
         {
             string query = "/api/interceptorId/";
-            string intSerial = "135792468";
+            string intSerial = "135792468321";
             string intId = "8675308";
 
             SHA1 sha = new SHA1CryptoServiceProvider();
@@ -122,8 +122,8 @@ namespace InterceptorTester.Tests.AdminTests
             InterceptorIdJSON json = new InterceptorIdJSON ("TESTSERIAL", stringPassword);
             InterceptorIdJSON[] idList = new InterceptorIdJSON[1];
             idList[0] = json;
-            //JObject jPass = JObject.Parse("{\"idList\":[{\"intId\":\""+intId+"\", \"intSerial\":\""+intSerial+"\", \"key\": \"IEEgQiBQIFIgVSAiIP8=\"}]}");
-            GenericRequest newId = new GenericRequest(TestGlobals.adminServer, query, idList);
+            JObject jPass = JObject.Parse("{\"idList\":[{\"intId\":\""+intId+"\", \"intSerial\":\""+intSerial+"\", \"key\": \"IEEgQiBQIFIgVSAiIP8=\"}]}");
+            GenericRequest newId = new GenericRequest(TestGlobals.adminServer, query, jPass);
             Test mTest = new Test(newId);
 
             HttpClient client = new HttpClient();
