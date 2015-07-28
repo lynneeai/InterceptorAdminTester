@@ -37,6 +37,12 @@ namespace InterceptorTester.Tests.AdminTests
             Test authTest = new Test(authCall);
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(authTest, HTTPOperation.POST));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+            Console.WriteLine(statusCode);
+            if (!statusCode.Equals("201"))
+            {
+                Console.WriteLine(HTTPSCalls.result.Key.ToString());
+                Console.WriteLine(HTTPSCalls.result.Value);
+            }
             sessionToken = JObject.Parse(HTTPSCalls.result.Value);
             Console.WriteLine(sessionToken.ToString());
             Assert.AreEqual("201", statusCode);
