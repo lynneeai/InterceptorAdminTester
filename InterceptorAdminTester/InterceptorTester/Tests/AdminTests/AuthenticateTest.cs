@@ -32,7 +32,9 @@ namespace InterceptorTester.Tests.AdminTests
             AuthenticateJSON json = new AuthenticateJSON();
             //Set up JSON
             json.userID = TestGlobals.username;
+            Console.WriteLine("username: " + TestGlobals.username);
             json.password = TestGlobals.password;
+            Console.WriteLine("password: " + TestGlobals.password);
             Authenticate authCall = new Authenticate(TestGlobals.adminServer, json);
             Test authTest = new Test(authCall);
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(authTest, HTTPOperation.POST));
