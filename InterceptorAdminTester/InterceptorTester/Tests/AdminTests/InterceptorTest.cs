@@ -43,7 +43,6 @@ namespace InterceptorTester.Tests.AdminTests
 			Console.WriteLine(newInt.getJson().ToString());
 			AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
 			Console.WriteLine(HTTPSCalls.result.Value.ToString());
-
 		}
 
 		[Test()]
@@ -64,7 +63,7 @@ namespace InterceptorTester.Tests.AdminTests
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
             Console.WriteLine(HTTPSCalls.result.Value.ToString());
             string statusCode = HTTPSCalls.result.Key.Property("StatusCode").Value.ToString();
-            Console.WriteLine(HTTPSCalls.result.Value.ToString());
+            Console.WriteLine(statusCode);
 			Assert.AreEqual ("201", statusCode);
 		}
 
@@ -115,10 +114,15 @@ namespace InterceptorTester.Tests.AdminTests
         private static string idPost()
         {
             string query = "/api/interceptorId/";
+            long serialNum = 123456789001;
 			//IntSerial needs to be 12 characters long or it'll error horribly
-            string intSerial = "135792468321";
+            while (intExists(serialNum))
+            {
+                serialNum++;
+            }
+            string intSerial = serialNum.ToString();
 
-            string intId = "8675308";
+            string intId = intSerial.Substring(5);
 
             SHA1 sha = new SHA1CryptoServiceProvider();
             byte[] bArray = new byte[25463635];
@@ -142,6 +146,19 @@ namespace InterceptorTester.Tests.AdminTests
             TestGlobals.intIdCreated = intId;
             TestGlobals.intSerialCreated = intSerial;
             return intId;
+        }
+
+        private static bool intExists(long serialNum)
+        {
+            string query = "/API/Interceptor/" + serialNum.ToString();
+            Console.WriteLine(query);
+            GenericRequest getInt = new GenericRequest(TestGlobals.adminServer, query, null);
+            Test mTest = new Test(getInt);
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
+            AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.GET, client));
+            string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+            return statusCode.Equals("200");
         }
 
 		[Test()]
@@ -215,6 +232,11 @@ namespace InterceptorTester.Tests.AdminTests
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
 			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (mTest, HTTPOperation.PUT, client));
 			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+            Console.WriteLine(statusCode);
+            if(!statusCode.Equals("204"))
+            {
+                Console.WriteLine(HTTPSCalls.result.Key.ToString());
+            }
 			Assert.AreEqual ("204", statusCode);
 		}
 
@@ -232,8 +254,14 @@ namespace InterceptorTester.Tests.AdminTests
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
 			AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.PUT, client));
 			string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+            Console.WriteLine(statusCode);
+            if (!statusCode.Equals("204"))
+            {
+                Console.WriteLine(HTTPSCalls.result.Key.ToString());
+                Console.WriteLine(HTTPSCalls.result.Value);
+                Console.WriteLine(query);
+            }
 			Assert.AreEqual("204", statusCode);
-
 		}
 
 
@@ -254,9 +282,14 @@ namespace InterceptorTester.Tests.AdminTests
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(intTest, HTTPOperation.DELETE, client));
             Console.WriteLine(HTTPSCalls.result.Value);
-			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+            string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+            Console.WriteLine(statusCode);
+            if (!statusCode.Equals("204"))
+            {
+                Console.WriteLine(HTTPSCalls.result.Key.ToString());
+            }
+            intStore = HTTPSCalls.result;
 			Assert.AreEqual ("204", statusCode);
-			intStore = HTTPSCalls.result;
 		}
 
 		[Test()]
@@ -283,9 +316,14 @@ namespace InterceptorTester.Tests.AdminTests
 			HttpClient client = new HttpClient ();
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
 			AsyncContext.Run (async () => await new HTTPSCalls ().runTest (intTest, HTTPOperation.DELETE, client));
-			string statusCode = HTTPSCalls.result.Key.GetValue ("StatusCode").ToString ();
+            string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+            Console.WriteLine(statusCode);
+            if (!statusCode.Equals("400"))
+            {
+                Console.WriteLine(HTTPSCalls.result.Key.ToString());
+            }
+            intStore = HTTPSCalls.result;
 			Assert.AreEqual ("400", statusCode);
-			intStore = HTTPSCalls.result;
 		}
 
 
