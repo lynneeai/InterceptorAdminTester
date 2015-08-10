@@ -29,6 +29,8 @@ namespace ConsoleApplication1
 		public static string locIdCreated;
         public static string intIdCreated;
         public static string intSerialCreated;
+		public static string tempIntIdCreated;
+		public static string tempIntSerialCreated;
         public static string logFile = "../../../logs/testLog.txt";
 
 		public static void setup()

@@ -74,9 +74,9 @@ namespace InterceptorTester.Tests.AdminTests
 			Console.WriteLine("Creating intercepter w/ loc:");
 			Console.WriteLine(loc);
 
-			idPost ();
-			InterceptorJSON json = new InterceptorJSON (int.Parse (loc), TestGlobals.intSerialCreated, "wappisk", "HEYYYYYYY");
-			Interceptor newInt = new Interceptor (TestGlobals.adminServer, TestGlobals.intIdCreated, json);
+			idPostForFailingTest ();
+			InterceptorJSON json = new InterceptorJSON (int.Parse (loc), TestGlobals.tempIntSerialCreated, "wappisk", "HEYYYYYYY");
+			Interceptor newInt = new Interceptor (TestGlobals.adminServer, TestGlobals.tempIntIdCreated, json);
 			Test mTest = new Test (newInt);
 			HttpClient client = new HttpClient ();
 			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken ();
@@ -110,8 +110,46 @@ namespace InterceptorTester.Tests.AdminTests
 			intStore = HTTPSCalls.result;
 		}
 
+		private static string idPost()
+		{
+			string query = "/api/interceptorId/";
+			long serialNum = 123456789001;
+			//IntSerial needs to be 12 characters long or it'll error horribly
+			while (intExists(serialNum))
+			{
+				serialNum++;
+			}
+			string intSerial = serialNum.ToString();
 
-        private static string idPost()
+			string intId = intSerial.Substring(5);
+
+			SHA1 sha = new SHA1CryptoServiceProvider();
+			byte[] bArray = new byte[25463635];
+			byte[] hashedPasswordInBytes = sha.ComputeHash(bArray);
+			var stringPassword = string.Concat(hashedPasswordInBytes.Select(b => string.Format("{0:X2}", b)));
+			InterceptorIdJSON json = new InterceptorIdJSON ("TESTSERIAL", stringPassword);
+			InterceptorIdJSON[] idList = new InterceptorIdJSON[1];
+			idList[0] = json;
+			JObject jPass = JObject.Parse("{\"idList\":[{\"intId\":\""+intId+"\", \"intSerial\":\""+intSerial+"\", \"key\": \"IEEgQiBQIFIgVSAiIP8=\"}]}");
+			GenericRequest newId = new GenericRequest(TestGlobals.adminServer, query, jPass);
+			Test mTest = new Test(newId);
+
+			HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = AuthenticateTest.getSessionToken();
+
+			AsyncContext.Run(async () => await new HTTPSCalls().runTest(mTest, HTTPOperation.POST, client));
+			string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
+			Console.WriteLine(statusCode);
+			Console.WriteLine(HTTPSCalls.result.Key.ToString());
+			Console.WriteLine(HTTPSCalls.result.Value.ToString());
+			TestGlobals.intIdCreated = intId;
+			TestGlobals.intSerialCreated = intSerial;
+			Console.WriteLine (intSerial);
+			return intId;
+		}
+
+
+        private static string idPostForFailingTest()
         {
             string query = "/api/interceptorId/";
             long serialNum = 123456789001;
@@ -143,8 +181,9 @@ namespace InterceptorTester.Tests.AdminTests
             Console.WriteLine(statusCode);
             Console.WriteLine(HTTPSCalls.result.Key.ToString());
             Console.WriteLine(HTTPSCalls.result.Value.ToString());
-            TestGlobals.intIdCreated = intId;
-            TestGlobals.intSerialCreated = intSerial;
+			TestGlobals.tempIntIdCreated = intId;
+			TestGlobals.tempIntSerialCreated = intSerial;
+            Console.WriteLine (intSerial);
             return intId;
         }
 
@@ -284,12 +323,12 @@ namespace InterceptorTester.Tests.AdminTests
             Console.WriteLine(HTTPSCalls.result.Value);
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
             Console.WriteLine(statusCode);
-            if (!statusCode.Equals("204"))
+            if (!statusCode.Equals("201"))
             {
                 Console.WriteLine(HTTPSCalls.result.Key.ToString());
             }
             intStore = HTTPSCalls.result;
-			Assert.AreEqual ("204", statusCode);
+			Assert.AreEqual ("201", statusCode);
 		}
 
 		[Test()]
