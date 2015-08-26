@@ -43,8 +43,8 @@ namespace InterceptorTester.Tests.AdminTests
         }
 
         [Test()]
-        public void getSingleOrganization()
-        {
+        public void getSingleOrganization() 
+		{
 			string query = "/api/organization/" + TestGlobals.orgIdCreated;
             GenericRequest getOrg = new GenericRequest(TestGlobals.adminServer, query, null);
             Test mTest = new Test(getOrg);

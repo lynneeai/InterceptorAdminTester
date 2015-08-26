@@ -36,6 +36,7 @@ namespace InterceptorTester.Tests.AdminTests
             json.password = TestGlobals.password;
             Console.WriteLine("password: " + TestGlobals.password);
             Authenticate authCall = new Authenticate(TestGlobals.adminServer, json);
+			Console.WriteLine (TestGlobals.adminServer);
             Test authTest = new Test(authCall);
             AsyncContext.Run(async () => await new HTTPSCalls().runTest(authTest, HTTPOperation.POST));
             string statusCode = HTTPSCalls.result.Key.GetValue("StatusCode").ToString();
