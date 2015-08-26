@@ -282,7 +282,7 @@ namespace InterceptorTester.Tests.AdminTests
 		[Test()]
 		public static void intWifiConfigUpdate()
 		{
-			string query = "/api/interceptor/wifi" + TestGlobals.intSerialCreated;
+			string query = "/api/interceptor/wifi/" + TestGlobals.intSerialCreated;
 			DeviceStatusPutJSON json = new DeviceStatusPutJSON();
 			json.deviceStatus = 1;
 			json.Ssid = "HeyThisIsTheNewSSID";
